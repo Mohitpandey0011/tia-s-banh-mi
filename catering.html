@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catering | Tia's Bánh Mì, Surfers Paradise</title>
+  <meta name="description" content="Vietnamese catering on the Gold Coast: mini bánh mì, rice paper rolls, street food boxes and boxed lunches. Same-day share packs or next-day catering, delivered around Surfers Paradise.">
+  <meta name="theme-color" content="#C2372B">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Catering</p>
+        <h1>Catering for the office, the party, the whole crew</h1>
+        <p class="lead">Fresh bánh mì, rice paper rolls and Vietnamese street food, delivered around Surfers Paradise or ready to collect from Cavill Lane.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:8px" aria-label="How catering works">
+      <div class="container speed-grid">
+        <div class="speed">
+          <span class="speed-label">Today · no notice</span>
+          <h2 style="font-size:1.5rem">Share packs</h2>
+          <p>For 4 to 6 people. Order in store or online and pick up when it suits.</p>
+          <a class="link-arrow" href="#share-packs-h">See share packs</a>
+        </div>
+        <div class="speed speed-next">
+          <span class="speed-label">Next day or later · order by 2pm</span>
+          <h2 style="font-size:1.5rem">Catering boxes</h2>
+          <p>For 8 to 100+. Build your order below and we'll call or text to confirm.</p>
+          <a class="link-arrow" href="#boxes-h">Build an order</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" aria-labelledby="share-packs-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Today · no notice needed</p>
+            <h2 id="share-packs-h">Share packs</h2>
+            <p>Grab one on the way to the beach, the footy or the office. Choose your fillings when you order.</p>
+          </div>
+          <a class="btn btn-primary" data-order-link href="https://tiasbanhmi.lifeintouch.net/">Order online</a>
+        </div>
+        <div class="grid grid-3" id="share-packs"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="boxes-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Next day or later</p>
+            <h2 id="boxes-h">Build your catering order</h2>
+            <p>Add boxes, or tell us how many people you're feeding and we'll suggest a mix.</p>
+          </div>
+        </div>
+
+        <form id="catering-form" class="builder" novalidate>
+          <div class="builder-boxes">
+            <div class="grid" id="catering-boxes"></div>
+          </div>
+
+          <aside class="builder-summary">
+            <div class="summary" id="order-summary" tabindex="-1" aria-labelledby="summary-h">
+              <h2 id="summary-h">Your order</h2>
+              <div class="suggest-row">
+                <div class="field">
+                  <label for="guests">Guests</label>
+                  <input id="guests" name="guests" type="number" inputmode="numeric" min="1" max="500" placeholder="e.g. 20">
+                </div>
+                <div class="field">
+                  <label for="style">Style</label>
+                  <select id="style" name="style">
+                    <option value="lunch">Lunch</option>
+                    <option value="snacks">Snacks</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" type="button" id="suggest" style="width:100%">Suggest boxes for my group</button>
+
+              <ul class="order-lines" id="order-lines" aria-live="polite"></ul>
+
+              <fieldset class="segmented">
+                <legend>Pick-up or delivery?</legend>
+                <input type="radio" name="fulfilment" id="f-pickup" value="pickup" checked>
+                <label for="f-pickup">Pick-up <small>Free, Cavill Lane</small></label>
+                <input type="radio" name="fulfilment" id="f-delivery" value="delivery">
+                <label for="f-delivery">Delivery <small id="delivery-label">$10 within 5 km</small></label>
+              </fieldset>
+
+              <dl class="totals">
+                <dt>Subtotal</dt><dd id="order-subtotal">$0</dd>
+                <dt>Delivery</dt><dd id="order-delivery">Free pick-up</dd>
+                <dt class="grand">Estimated total</dt><dd class="grand" id="order-total">$0</dd>
+              </dl>
+              <p class="feeds" id="order-feeds" aria-live="polite"></p>
+              <ul class="warnings" id="order-warnings" aria-live="polite" hidden></ul>
+            </div>
+          </aside>
+
+          <div class="builder-details">
+            <div class="form-card">
+              <h2 style="font-size:1.6rem">Your details</h2>
+              <p class="muted">We'll call or text to confirm and take payment. Your order isn't booked until we confirm it.</p>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input id="name" name="name" autocomplete="name" required>
+                </div>
+                <div class="field">
+                  <label for="phone">Mobile</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+                </div>
+                <div class="field">
+                  <label for="email">Email <span class="hint">(optional)</span></label>
+                  <input id="email" name="email" type="email" autocomplete="email">
+                </div>
+                <div class="field">
+                  <label for="company">Company <span class="hint">(optional)</span></label>
+                  <input id="company" name="company" autocomplete="organization">
+                </div>
+                <div class="field">
+                  <label for="date">Date</label>
+                  <input id="date" name="date" type="date" required>
+                </div>
+                <div class="field">
+                  <label for="time">Pick-up or delivery time</label>
+                  <select id="time" name="time" required></select>
+                </div>
+                <div class="field full" id="address-field" hidden>
+                  <label for="address">Delivery address</label>
+                  <input id="address" name="address" autocomplete="street-address" placeholder="Street, suburb, and any building or level details">
+                </div>
+                <div class="field full">
+                  <label for="notes">Notes <span class="hint">(fillings, vegetarian guests, allergies)</span></label>
+                  <textarea id="notes" name="notes" placeholder="e.g. 4 vegetarians, no chilli on half the mini bánh mì"></textarea>
+                </div>
+              </div>
+              <div class="form-errors" id="form-errors" tabindex="-1" role="alert" hidden></div>
+              <div class="btn-row" style="margin-top:20px">
+                <button class="btn btn-primary btn-lg" type="submit">Send catering request</button>
+              </div>
+              <div class="form-status" id="catering-status" tabindex="-1" role="status" aria-live="polite" hidden></div>
+            </div>
+          </div>
+        </form>
+        <a class="mobile-total" id="mobile-total" href="#order-summary" hidden>
+          <span id="mobile-total-text"></span><span class="mobile-total-cta">Review order</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section section-tint" aria-labelledby="good-h">
+      <div class="container grid grid-2">
+        <div>
+          <p class="eyebrow">Good to know</p>
+          <h2 id="good-h">Catering details</h2>
+          <ul class="rules" id="catering-rules"></ul>
+          <div class="notice" role="note" style="margin-top:20px">
+            <p><strong>Catering Bonus:</strong> spend $300 or more on catering and get $30 of Crunch Club credit. <a href="promotions.html#catering-bonus">See details</a></p>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Questions</p>
+          <h2>Catering FAQs</h2>
+          <div data-faq="catering"></div>
+          <p style="margin-top:16px">Something else? Call us on <a data-phone-link href="tel:+61449797339">0449 797 339</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/faq.js"></script>
+  <script src="assets/js/catering.js"></script>
+</body>
+</html>

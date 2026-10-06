@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu | Tia's Bánh Mì, Surfers Paradise</title>
+  <meta name="description" content="Bánh mì, street food, phở, noodle soup, vermicelli, Vietnamese curry, rice dishes and Vietnamese coffee at Tia's Bánh Mì on Cavill Lane, Surfers Paradise.">
+  <meta name="theme-color" content="#C2372B">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Menu</p>
+        <h1>Bánh mì, phở &amp; everything in between</h1>
+        <p class="lead">Every roll is baked crunchy and filled fresh to order. Ordering direct, in store or online, is always cheaper than delivery apps.</p>
+      </div>
+    </section>
+
+    <div class="menu-toolbar">
+      <div class="container">
+        <nav class="chip-row" id="menu-cats" aria-label="Menu categories"></nav>
+        <div class="menu-filters">
+          <div class="search-field">
+            <label class="sr-only" for="menu-search">Search the menu</label>
+            <input id="menu-search" type="search" placeholder="Search: pork, tofu, coffee…" autocomplete="off">
+          </div>
+          <label class="toggle"><input type="checkbox" data-filter value="v"> Vegetarian</label>
+          <label class="toggle"><input type="checkbox" data-filter value="popular"> Popular</label>
+          <span class="menu-count" id="menu-count" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container page-end">
+      <div id="menu-sections"></div>
+
+      <div class="menu-empty" id="menu-empty" hidden>
+        <p>No dishes match that. Try another word or clear the filters.</p>
+        <button class="btn btn-secondary" type="button" id="menu-clear">Clear filters</button>
+      </div>
+
+      <div class="menu-cta grid grid-2">
+        <div class="card">
+          <h2>Ready to order?</h2>
+          <p>Order and pay online, then pick up from Cavill Lane. Ordering direct is always cheaper than delivery apps.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" data-order-link href="https://tiasbanhmi.lifeintouch.net/">Order online</a>
+            <a class="btn btn-secondary" href="catering.html">Catering for a group</a>
+          </div>
+        </div>
+        <div class="notice" role="note">
+          <div>
+            <p><strong>Allergies and dietary needs</strong></p>
+            <p>Our kitchen handles many common allergens, so we can't guarantee any dish is allergen-free. Please tell us about allergies before you order. Dishes tagged Vegetarian are made without meat or seafood. Ask us if you also need to avoid fish sauce or egg. <a href="faq.html#allergies">More allergy info</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/menu.js"></script>
+</body>
+</html>

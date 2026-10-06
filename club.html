@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crunch Club | Tia's Bánh Mì rewards</title>
+  <meta name="description" content="Join Tia's Crunch Club for free. Earn 10 points for every $1, get every 10th Classic Pork Roll free, move up to Crispy and Golden tiers, and get a free Vietnamese iced coffee when you join.">
+  <meta name="theme-color" content="#C2372B">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <section class="club-hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Crunch Club · free to join</p>
+          <h1>Every 10th roll is <em>on us.</em></h1>
+          <p class="lead">Earn 10 points for every $1 you spend. 100 points is $1 off, so a Classic Pork Roll earns 135 points and ten of them earn you the next one free.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary btn-lg" href="#join">Join free</a>
+            <a class="btn btn-secondary btn-lg" href="#calculator">What would I earn?</a>
+          </div>
+        </div>
+        <div>
+          <div class="member-card" aria-labelledby="example-h">
+            <div class="member-card-top">
+              <span class="label" id="example-h">Crunch Club · Fresh</span>
+              <span class="example-tag">Example member</span>
+            </div>
+            <div class="member-points"><span id="example-points">1,020</span> <small>points</small></div>
+            <progress id="example-progress" max="1350" value="1020" aria-labelledby="example-to-go"></progress>
+            <p id="example-to-go">330 points to a free Classic Pork Roll</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="how-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">How it works</p>
+            <h2 id="how-h">Three steps, no app needed</h2>
+          </div>
+        </div>
+        <ol class="steps">
+          <li>
+            <h3>Join for free</h3>
+            <p>Sign up below with your name and mobile. It takes a minute, and your first Vietnamese iced coffee is on us.</p>
+          </li>
+          <li>
+            <h3>Earn every visit</h3>
+            <p>Give your mobile number when you pay. You get 10 points for every $1 you spend.</p>
+          </li>
+          <li>
+            <h3>Treat yourself</h3>
+            <p>Swap points for coffee, spring rolls, bánh mì and more. 100 points = $1.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="calculator" aria-labelledby="calc-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Points calculator</p>
+            <h2 id="calc-h">What would you earn in a year?</h2>
+          </div>
+        </div>
+        <div class="calc">
+          <div class="form-card">
+            <div class="field range-field">
+              <label for="calc-visits">How often do you visit?</label>
+              <output id="calc-visits-out" for="calc-visits">2 visits a week</output>
+              <input id="calc-visits" type="range" min="1" max="7" step="1" value="2">
+            </div>
+            <div class="field" style="margin-top:16px">
+              <label for="calc-spend">Usual spend per visit</label>
+              <div class="money-field">
+                <input id="calc-spend" type="number" inputmode="decimal" min="1" max="500" step="0.5" value="13.50">
+              </div>
+            </div>
+          </div>
+          <div class="calc-results" id="calc-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="rewards-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Rewards</p>
+            <h2 id="rewards-h">What your points get you</h2>
+            <p>Use points in store at any time. Mix and match, and leftover points stay in your account.</p>
+          </div>
+        </div>
+        <ul class="rewards" id="club-rewards"></ul>
+      </div>
+    </section>
+
+    <section class="section section-tint" aria-labelledby="tiers-h">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Levels</p>
+            <h2 id="tiers-h">Fresh, Crispy, Golden</h2>
+            <p>The more you visit, the more you get. Your level is based on points earned in the last 12 months.</p>
+          </div>
+        </div>
+        <div class="tiers" id="club-tiers"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="topup-h">
+      <div class="container grid grid-2">
+        <div>
+          <p class="eyebrow">Top up &amp; save</p>
+          <h2 id="topup-h">Pay ahead, get bonus credit</h2>
+          <p>Top up your Crunch Club account at the counter and we add extra. Great for regulars and office lunch funds.</p>
+          <div class="topups" id="club-topups"></div>
+        </div>
+        <div>
+          <p class="eyebrow">The fine print, kept short</p>
+          <h2>Club rules</h2>
+          <ul class="rules">
+            <li>Points stay as long as you buy something at least once every 12 months.</li>
+            <li>Your level is checked monthly against points earned in the last 12 months.</li>
+            <li>Points can't be swapped for cash and don't apply to Uber Eats or other delivery apps.</li>
+            <li>Top-up credit doesn't expire while your account is active.</li>
+            <li>One account per person. We'll never sell your details.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="join" aria-labelledby="join-h">
+      <div class="container grid grid-2">
+        <div>
+          <p class="eyebrow">Join free</p>
+          <h2 id="join-h">Join the Crunch Club</h2>
+          <p>Takes a minute. Your free Vietnamese iced coffee is ready on your next visit.</p>
+          <div data-faq="club" style="margin-top:24px"></div>
+        </div>
+        <form class="form-card" id="join-form" novalidate>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="join-name">Name</label>
+              <input id="join-name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="join-mobile">Mobile</label>
+              <input id="join-mobile" type="tel" autocomplete="tel" required>
+            </div>
+            <div class="field">
+              <label for="join-birthday">Birthday month <span class="hint">(optional)</span></label>
+              <select id="join-birthday">
+                <option value="">Choose</option>
+                <option>January</option><option>February</option><option>March</option>
+                <option>April</option><option>May</option><option>June</option>
+                <option>July</option><option>August</option><option>September</option>
+                <option>October</option><option>November</option><option>December</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="join-email">Email <span class="hint">(optional)</span></label>
+              <input id="join-email" type="email" autocomplete="email">
+            </div>
+            <label class="check full"><input type="checkbox" id="join-terms" required> I agree to the Crunch Club rules on this page.</label>
+            <label class="check full"><input type="checkbox" id="join-marketing"> Send me member offers by SMS or email. You can opt out any time.</label>
+          </div>
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn btn-primary btn-lg" type="submit">Join the Crunch Club</button>
+          </div>
+          <div class="form-status" id="join-status" tabindex="-1" role="status" aria-live="polite" hidden></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/faq.js"></script>
+  <script src="assets/js/club.js"></script>
+</body>
+</html>
