@@ -8,13 +8,26 @@
   var C = window.TIAS_CONFIG;
   var D = window.TIAS_DATA;
   var TIAS = window.TIAS;
+
+  // If any shared script is missing or out of date, say so instead of
+  // showing an empty page.
+  if (!C || !D || !TIAS || typeof TIAS.catalog !== "function" || !TIAS.cart || !window.TIAS_ART) {
+    var holder = document.getElementById("order-menu");
+    if (holder) {
+      holder.innerHTML =
+        '<div class="notice" role="alert"><p><strong>Please refresh this page.</strong> ' +
+        "Part of the site didn't load. If it keeps happening, call us on 0449 797 339.</p></div>";
+    }
+    return;
+  }
+
   var esc = TIAS.esc;
 
   var LEAD = C.pickupLeadMinutes || 15;
   var STEP = C.pickupStepMinutes || 15;
   var MAX_QTY = 50;
   var DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  var TAG_LABELS = { popular: "Popular", v: "Vegetarian", spicy: "Spicy" };
+  var TAG_LABELS = { popular: "Popular", v: "Vegetarian", gf: "Gluten free", spicy: "Spicy" };
 
   var catalog = TIAS.catalog();
   TIAS.cart.prune(catalog.byId);
@@ -226,7 +239,21 @@
     if (id) TIAS.cart.note(id, e.target.value);
   });
 
+  // What the status box is showing: null, "sending", "summary" (the order
+  // to text/email) or "success".
+  var statusState = null;
+
+  // A summary that no longer matches the basket or form must not be sent.
+  function clearSummary() {
+    if (statusState !== "summary") return;
+    statusEl.hidden = true;
+    statusEl.innerHTML = "";
+    statusState = null;
+  }
+
   document.addEventListener("tias:cart", function (e) {
+    clearSummary();
+    errorsEl.hidden = true;
     if (e.detail && e.detail.noteOnly) return;
     var f = captureFocus();
     renderActions();
@@ -326,14 +353,32 @@
     else if (!previous && slots.length && slots[0].value === "asap") timeSelect.value = "asap";
 
     var note = document.getElementById("pickup-note");
+    var hasAsap = slots.length > 0 && slots[0].value === "asap";
     var firstTimed = slots.filter(function (s) {
       return s.value !== "asap";
     })[0];
-    if (!TIAS.openStatus().open && firstTimed) {
-      note.textContent = "We're closed right now. Order ahead for " + firstTimed.label.toLowerCase() + " or later.";
+    if (!hasAsap && firstTimed) {
+      note.textContent =
+        (TIAS.openStatus().open ? "We've stopped taking orders for today." : "We're closed right now.") +
+        " Order ahead for " + lowerFirst(firstTimed.label) + " or later.";
     } else {
       note.textContent = "Ready about " + LEAD + " minutes after we confirm.";
     }
+  }
+
+  // "Tomorrow, 8:15am" -> "tomorrow, 8:15am"; weekday names stay capitalised.
+  function lowerFirst(label) {
+    return /^(Today|Tomorrow)/.test(label) ? label.charAt(0).toLowerCase() + label.slice(1) : label;
+  }
+
+  // "2026-10-08T09:00" -> "Thu 8 Oct"
+  function shortDate(value) {
+    return new Date(value.slice(0, 10) + "T12:00:00Z").toLocaleDateString("en-AU", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      timeZone: "UTC",
+    });
   }
 
   renderTimes();
@@ -347,9 +392,26 @@
   }
 
   var mobile = document.getElementById("order-mobile");
+  var nameInput = document.getElementById("order-name");
+  var submitBtn = form.querySelector('button[type="submit"]');
+  var sending = false;
+
   mobile.addEventListener("input", function () {
     mobile.setCustomValidity("");
   });
+  nameInput.addEventListener("input", function () {
+    nameInput.setCustomValidity("");
+  });
+
+  // Any edit after the summary is shown makes that summary out of date.
+  form.addEventListener("input", clearSummary);
+  form.addEventListener("change", clearSummary);
+
+  function setSending(on) {
+    sending = on;
+    submitBtn.disabled = on;
+    submitBtn.textContent = on ? "Sending…" : "Place order";
+  }
 
   function showErrors(list) {
     errorsEl.innerHTML =
@@ -362,8 +424,10 @@
   }
 
   function startNewOrder() {
+    statusState = null;
     TIAS.cart.clear();
     form.reset();
+    errorsEl.hidden = true;
     statusEl.hidden = true;
     statusEl.innerHTML = "";
     renderTimes();
@@ -374,6 +438,7 @@
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+    if (sending) return;
     var lines = currentLines();
     var problems = [];
     if (!lines.length) problems.push("Add at least one item to your order.");
@@ -393,19 +458,29 @@
     mobile.setCustomValidity(
       digits.length >= 9 && digits.length <= 12 ? "" : "Please enter a mobile number we can text."
     );
+    nameInput.setCustomValidity(nameInput.value.trim() ? "" : "Please enter your name.");
 
     if (problems.length) {
       showErrors(problems);
       return;
     }
-    if (!form.reportValidity()) return;
     errorsEl.hidden = true;
+    if (!form.reportValidity()) return;
 
-    var name = document.getElementById("order-name").value.trim();
+    var name = nameInput.value.trim();
     var phone = mobile.value.trim();
     var notes = document.getElementById("order-notes").value.trim();
     var club = clubBox.checked;
-    var slot = timeSelect.options[timeSelect.selectedIndex].textContent;
+    // Label from freshly built slots, so "Tomorrow" is never stale.
+    var fresh = buildSlots().filter(function (s) {
+      return s.value === chosen;
+    })[0];
+    if (!fresh) {
+      renderTimes();
+      showErrors(["That pick-up time has passed. Please choose another."]);
+      return;
+    }
+    var slot = fresh.value === "asap" ? fresh.label : fresh.label + " (" + shortDate(fresh.value) + ")";
     var number = orderNumber();
     var t = totals(lines);
 
@@ -426,6 +501,11 @@
     out.push("Subtotal: " + TIAS.price(t.subtotal) + (t.tbc ? " + items priced in store" : ""));
     out.push("Payment: pay on pick-up");
     if (notes) out.push("", "Order notes: " + notes);
+
+    if (C.formEndpoint) {
+      setSending(true);
+      statusState = "sending";
+    }
 
     TIAS.sendForm({
       statusEl: statusEl,
@@ -456,9 +536,13 @@
         "</strong>. We'll text " + esc(phone) + " to confirm. Pay when you pick up.</p>" +
         '<p><button type="button" class="btn btn-secondary" data-new-order>Start a new order</button></p>',
       onSuccess: function () {
+        setSending(false);
+        statusState = "success";
         TIAS.cart.clear();
       },
       onFallback: function () {
+        setSending(false);
+        statusState = "summary";
         statusEl.insertAdjacentHTML(
           "beforeend",
           '<p class="new-order"><button type="button" class="btn btn-ghost" data-new-order>Sent it? Start a new order</button></p>'

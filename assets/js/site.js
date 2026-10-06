@@ -408,9 +408,6 @@
   }
 
   function fillContactDetails() {
-    document.querySelectorAll("[data-order-link]").forEach(function (a) {
-      a.href = C.orderUrl;
-    });
     document.querySelectorAll("[data-phone-link]").forEach(function (a) {
       a.href = "tel:" + C.phoneIntl;
       if (!a.textContent.trim()) a.textContent = C.phoneDisplay;
@@ -479,7 +476,7 @@
     );
   };
 
-  var TAG_LABELS = { popular: "Popular", v: "Vegetarian", spicy: "Spicy" };
+  var TAG_LABELS = { popular: "Popular", v: "Vegetarian", gf: "Gluten free", spicy: "Spicy" };
 
   // A dish picture: the real photo if data.js gives one (falling back to the
   // illustration if it fails to load), otherwise the illustration.
@@ -797,6 +794,7 @@
   renderFooter();
   fillContactDetails();
   renderHoursTables();
+  if (window.TIAS_DATA) TIAS.cart.prune(TIAS.catalog().byId);
   updateCartCount();
   updateOpenStatus();
   setInterval(updateOpenStatus, 60 * 1000);

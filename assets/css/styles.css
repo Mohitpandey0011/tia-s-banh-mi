@@ -2399,21 +2399,25 @@ address {
 /* ---------- ordering ---------- */
 
 .order-btn {
-  gap: 0;
+  position: relative;
 }
 
+/* Sits over the button's corner, so it never widens the header. */
 .cart-count {
+  position: absolute;
+  top: -7px;
+  right: -7px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 22px;
   height: 22px;
   padding: 0 6px;
-  margin-left: 8px;
   border-radius: 999px;
+  border: 2px solid var(--chilli);
   background: var(--cream);
   color: var(--chilli-dark);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -2800,4 +2804,9 @@ address {
     width: 44px;
     height: 44px;
   }
+}
+
+.tag-gf {
+  background: #e2edf5;
+  color: #24506e;
 }

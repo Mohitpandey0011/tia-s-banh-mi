@@ -54,6 +54,10 @@ Everything you'd normally change is in two files:
 The pages read from these files, so there's no need to touch the HTML to
 change a price or add a dish.
 
+After changing anything in `assets/`, run `python3 tools/bump-version.py`.
+It stamps the CSS/JS links with a new version, so returning visitors get the
+new files instead of old copies cached by their browser.
+
 ### Orders and forms (pick-up orders, catering requests, Crunch Club sign-ups)
 
 The basket is saved in the customer's browser, so it stays filled while they
@@ -76,17 +80,19 @@ That's a later step.
 Details came from the TapTouch store, Uber Eats and the Cavill Lane centre
 listing. Some items couldn't be seen in full, so check these:
 
-**Menu (`data.js`)**
-- [ ] Bánh mì prices: Classic Pork Roll $13.50, BBQ Pork, Lemongrass Chicken
-  and Tuna $14.50 came from the online store. Lemongrass Beef, Crispy Pork,
-  Pork Meatballs and BBQ Prawn are assumed $14.50.
-- [ ] Prices for everything showing "Price on order" (`price: null`):
-  Avocado & Salad, Tofu & Salad, street food, rice dishes, phở, drinks.
-- [ ] Dishes marked `draft: true` (shown with a "To confirm" tag) were
-  guessed from the store's category names: phở, noodle soup, vermicelli,
-  curry, sides and drinks. Replace them with the real dishes.
-- [ ] Vegetarian tags, and whether fish sauce or egg is used in those dishes.
-- [ ] Add food photos if available (none are used yet).
+**Menu (`data.js`)**: rebuilt from the online store and Uber Eats (49 dishes).
+- [ ] Bánh mì and street food prices came from the shop's own online store.
+  Check three odd ones: Fried Spring Rolls $12.89 (Uber Eats says $12.50),
+  Rice Paper Roll $5.00 (Uber Eats $9.50), and Grilled Quail $12 (seen only
+  once).
+- [ ] Phở, vermicelli, curry, rice dishes, sides, extras and drinks only had
+  Uber Eats prices, so the site shows the Uber Eats price minus $1 (the
+  usual difference). These show a "To confirm" tag (`draft: true`).
+- [ ] Missing: no Noodle Soup dishes or fresh-pressed juices could be found,
+  so they aren't listed. Add them in `data.js`.
+- [ ] Vegetarian and Gluten free tags follow the online menu's labels.
+- [ ] Add food photos if available. Set `image` on a dish; the drawn
+  illustration is used until then.
 
 **Promotions, catering and club (`data.js`):** these are proposals. Set the
 real numbers.
