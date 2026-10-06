@@ -6,8 +6,13 @@
 window.TIAS_CONFIG = {
   name: "Tia's Bánh Mì",
 
-  // Every "Order now" button goes to the existing online store.
-  orderUrl: "https://tiasbanhmi.lifeintouch.net/",
+  // Every "Order now" button opens the ordering page on this site.
+  orderUrl: "order.html",
+
+  // Pick-up ordering: earliest pick-up is this many minutes from now, and
+  // pick-up times are offered in steps of this many minutes.
+  pickupLeadMinutes: 15,
+  pickupStepMinutes: 15,
 
   phoneDisplay: "0449 797 339",
   phoneIntl: "+61449797339",
@@ -50,8 +55,8 @@ window.TIAS_CONFIG = {
   },
 
   // Optional: a form service URL that accepts JSON POSTs (Formspree, Basin,
-  // Getform...). When set, catering requests and Crunch Club sign-ups are
-  // sent there instead of using the email/text fallback.
+  // Getform...). When set, pick-up orders, catering requests and Crunch Club
+  // sign-ups are sent there instead of using the email/text fallback.
   formEndpoint: "",
 
   // Shows a thin "preview" strip at the top and marks dishes that still

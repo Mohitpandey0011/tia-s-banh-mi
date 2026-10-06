@@ -5,14 +5,16 @@ the structure of the Roll'd site (menu, promotions, catering, loyalty club)
 using Tia's own name, menu and details, and fixes the weak spots found in
 `research/rolld-site-review.md`.
 
-The existing online store at https://tiasbanhmi.lifeintouch.net/ is **not
-changed**. Every "Order now" button on this site links to it.
+Ordering is built into this site. Every "Order now" button opens
+`order.html`, so customers never leave the new site. The old TapTouch store is
+not linked from anywhere and has not been changed.
 
 ## Pages
 
 | Page | What it does |
 |---|---|
 | `index.html` | Home: hero, featured bánh mì, menu categories, promotions, Crunch Club teaser, catering, hours and map |
+| `order.html` | Online ordering for pick-up: add dishes, notes per item, pick-up time (ASAP or scheduled from opening hours), Crunch Club points, send order |
 | `menu.html` | Full menu by category, with search, Vegetarian/Popular filters and Vietnamese names |
 | `promotions.html` | One card per offer: what you get, where it works, terms, shareable link (`promotions.html#early-bird`) |
 | `catering.html` | Same-day share packs plus next-day catering boxes, "suggest boxes for my group", live total, request form |
@@ -52,16 +54,22 @@ Everything you'd normally change is in two files:
 The pages read from these files, so there's no need to touch the HTML to
 change a price or add a dish.
 
-### Forms (catering requests and Crunch Club sign-ups)
+### Orders and forms (pick-up orders, catering requests, Crunch Club sign-ups)
 
-There's no server, so forms work like this:
+The basket is saved in the customer's browser, so it stays filled while they
+move between pages. There's no server, so orders and forms are delivered
+like this:
 
 1. If `formEndpoint` is set in `config.js` (e.g. a free
    [Formspree](https://formspree.io) form URL), submissions are sent there
    and land in the shop's inbox.
-2. Otherwise the customer sees a summary of their request with buttons to
-   **email** it (if `email` is set), **text** it to 0449 797 339, or
-   **call**. Nothing gets lost.
+2. Otherwise the customer sees a summary of their order or request with
+   buttons to **email** it (if `email` is set), **text** it to
+   0449 797 339, or **call**. Nothing gets lost.
+
+Customers pay in store when they pick up. Taking card payments online needs
+a payment provider (e.g. Square or Stripe) connected to a small backend.
+That's a later step.
 
 ## Before going live: please confirm
 
@@ -86,14 +94,20 @@ real numbers.
   ($30 credit on $300+), free coffee on joining.
 - [ ] Catering box contents and prices, share pack prices, 2pm cutoff,
   delivery fee ($10), radius (5 km) and minimum ($120).
-- [ ] Share packs need adding to the TapTouch store if they're to be
-  ordered online.
 - [ ] Crunch Club: 10 points per $1, 100 points = $1, levels at 1,500 and
   4,000 points, rewards, top-up bonuses, 12-month expiry.
 - [ ] **How points will be tracked.** The site explains the club and
   collects sign-ups, but points need a loyalty system at the counter. Ask
   TapTouch whether their POS has loyalty built in, or use a separate
   loyalty app.
+
+**Ordering**
+- [ ] Set `formEndpoint` (or `email`) so orders arrive in your inbox
+  instead of by text message.
+- [ ] Pick-up lead time (15 minutes) and time steps (15 minutes) in
+  `config.js`.
+- [ ] Dishes without a price can still be ordered and show "Price TBC".
+  Add prices in `data.js` and they appear automatically.
 
 **Config (`config.js`)**
 - [ ] Opening hours (currently 8am–9pm every day).
@@ -104,7 +118,8 @@ real numbers.
 
 ## What's improved over the Roll'd site
 
-- One ordering link everywhere, instead of several platforms.
+- Ordering lives on the same site, with one basket and one flow, instead of
+  several platforms.
 - The loyalty page explains everything without signing in: a worked
   example, a calculator, rewards, levels and expiry rules.
 - Opening hours, address, phone and live "open now" status on every page.
@@ -116,8 +131,8 @@ real numbers.
 ## Files
 
 ```
-index.html, menu.html, promotions.html, catering.html, club.html,
-find-us.html, faq.html, 404.html
+index.html, order.html, menu.html, promotions.html, catering.html,
+club.html, find-us.html, faq.html, 404.html
 assets/css/styles.css      all styling (colours at the top)
 assets/js/config.js        business details
 assets/js/data.js          menu, promotions, catering, club, FAQs

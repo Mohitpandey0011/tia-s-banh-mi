@@ -587,13 +587,13 @@ window.TIAS_DATA = {
       id: "how-to-order-online",
       group: "ordering",
       q: "How do I order online?",
-      a: "Tap Order now on any page to open our online store. Choose your food, pay, and we'll have it ready for you on Cavill Lane.",
+      a: "Tap Order now on any page. Add your food, choose a pick-up time and send your order. We'll reply to confirm, and you pay when you collect from Cavill Lane.",
     },
     {
       id: "online-vs-delivery-prices",
       group: "ordering",
       q: "Why are prices higher on delivery apps?",
-      a: "Delivery apps set their own prices and fees. Ordering direct, in store or through our online store, is always the best price.",
+      a: "Delivery apps set their own prices and fees. Ordering direct, in store or on this website, is always the best price.",
     },
     {
       id: "where-to-pick-up",

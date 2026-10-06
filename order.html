@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Online | Tia's Bánh Mì, Surfers Paradise</title>
+  <meta name="description" content="Order Tia's Bánh Mì online for pick-up from Cavill Lane, Surfers Paradise. Choose your food and pick-up time, then pay when you collect.">
+  <meta name="theme-color" content="#C2372B">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main" tabindex="-1">
+    <section class="page-hero order-hero">
+      <div class="container">
+        <p class="eyebrow">Order online</p>
+        <h1>Order for pick-up</h1>
+        <p class="lead">Add your food, choose a pick-up time and collect from Cavill Lane. Pay when you pick up.</p>
+        <p class="order-hero-status"><span class="status-pill" data-open-status></span> <a href="#cart-panel" class="link-arrow">Go to your order</a></p>
+      </div>
+    </section>
+
+    <div class="menu-toolbar">
+      <div class="container">
+        <nav class="chip-row" id="order-cats" aria-label="Menu categories"></nav>
+      </div>
+    </div>
+
+    <div class="container order-layout page-end">
+      <div class="order-menu" id="order-menu"></div>
+
+      <aside class="cart-panel" id="cart-panel" aria-labelledby="cart-heading">
+        <form class="cart-card" id="order-form" novalidate>
+          <h2 id="cart-heading" tabindex="-1">Your order <span class="cart-heading-count" id="cart-count-label"></span></h2>
+          <ul class="cart-lines" id="cart-lines" aria-live="polite"></ul>
+
+          <dl class="totals">
+            <dt class="grand">Subtotal</dt>
+            <dd class="grand" id="cart-subtotal">$0</dd>
+          </dl>
+          <p class="cart-tbc" id="cart-tbc" hidden></p>
+          <p class="cart-pay">Pay in store when you pick up.</p>
+
+          <div class="field">
+            <label for="pickup-time">Pick-up time</label>
+            <select id="pickup-time" required></select>
+            <p class="hint-text" id="pickup-note"></p>
+          </div>
+          <div class="field">
+            <label for="order-name">Name</label>
+            <input id="order-name" autocomplete="name" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label for="order-mobile">Mobile</label>
+            <input id="order-mobile" type="tel" autocomplete="tel" maxlength="20" required>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="order-club">
+            <span>Add Crunch Club points to this mobile. <a href="club.html#join">Not a member? Join free</a></span>
+          </label>
+          <p class="points-preview" id="points-preview" hidden></p>
+          <div class="field">
+            <label for="order-notes">Order notes <span class="hint">(optional)</span></label>
+            <textarea id="order-notes" maxlength="300" placeholder="Anything else we should know?"></textarea>
+          </div>
+
+          <div class="form-errors" id="order-errors" tabindex="-1" role="alert" hidden></div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Place order</button>
+          <div class="form-status" id="order-status" tabindex="-1" role="status" aria-live="polite" hidden></div>
+        </form>
+      </aside>
+    </div>
+
+    <a class="mobile-total" id="order-bar" href="#cart-panel" hidden>
+      <span id="order-bar-text"></span><span class="mobile-total-cta">View order</span>
+    </a>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/order.js"></script>
+</body>
+</html>

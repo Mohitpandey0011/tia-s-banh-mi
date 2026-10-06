@@ -45,6 +45,12 @@
       : "$" + n.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
+  // Always with cents, for order baskets: 27 -> "$27.00".
+  TIAS.price = function (n) {
+    if (n == null) return "";
+    return "$" + n.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   TIAS.number = function (n) {
     return Math.round(n).toLocaleString("en-AU");
   };
@@ -189,9 +195,9 @@
       "</nav>" +
       '<div class="header-actions">' +
       '<span class="status-pill header-status" data-open-status></span>' +
-      '<a class="btn btn-primary btn-sm" data-order-link href="' +
+      '<a class="btn btn-primary btn-sm order-btn" data-order-link href="' +
       TIAS.esc(C.orderUrl) +
-      '">Order now</a>' +
+      '">Order now<span class="cart-count" data-cart-count hidden></span></a>' +
       '<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">' +
       '<span class="sr-only">Open menu</span><span class="nav-toggle-bars" aria-hidden="true"></span>' +
       "</button></div></div>";
@@ -414,7 +420,8 @@
    * sending fails) shows the details with buttons to email, text or call
    * the shop, so a request is never lost.
    *
-   * opts: { statusEl, subject, lines: [..], data: {..}, successHtml, introHtml, onSuccess }
+   * opts: { statusEl, subject, lines: [..], data: {..}, successHtml, introHtml,
+   *         onSuccess, onFallback(failed), smsLabel, emailLabel }
    */
   TIAS.sendForm = function (opts) {
     var status = opts.statusEl;
@@ -432,12 +439,14 @@
       if (C.email) {
         buttons.push(
           '<a class="btn btn-primary" href="mailto:' + TIAS.esc(C.email) +
-          "?subject=" + enc(opts.subject) + "&body=" + enc(body) + '">Email it to us</a>'
+          "?subject=" + enc(opts.subject) + "&body=" + enc(body) + '">' +
+          TIAS.esc(opts.emailLabel || "Email it to us") + "</a>"
         );
       }
       buttons.push(
         '<a class="btn ' + (C.email ? "btn-secondary" : "btn-primary") +
-        '" href="sms:' + C.phoneIntl + "?&body=" + enc(body) + '">Text it to us</a>'
+        '" href="sms:' + C.phoneIntl + "?&body=" + enc(body) + '">' +
+        TIAS.esc(opts.smsLabel || "Text it to us") + "</a>"
       );
       buttons.push('<a class="btn btn-secondary" href="tel:' + C.phoneIntl + '">Call ' + C.phoneDisplay + "</a>");
       buttons.push('<button class="btn btn-ghost" type="button" data-copy-summary>Copy details</button>');
@@ -453,6 +462,7 @@
       copy.addEventListener("click", function () {
         TIAS.copy(body, copy);
       });
+      if (opts.onFallback) opts.onFallback(failed);
     }
 
     if (!C.formEndpoint) {
@@ -505,12 +515,171 @@
     }
   };
 
+  /* ---------- order basket ---------- */
+
+  /*
+   * Everything a customer can order online: the menu plus share packs.
+   * Returns { categories: [{id, name, blurb, items}], byId: {id: item} }.
+   */
+  TIAS.catalog = function () {
+    var D = window.TIAS_DATA;
+    var categories = D.menu.slice();
+    var packs = (D.catering && D.catering.sharePacks) || [];
+    if (packs.length) {
+      categories.push({
+        id: "share-packs",
+        name: "Share Packs",
+        blurb: "Feeds 4 to 6. Tell us your fillings in the note.",
+        items: packs.map(function (p) {
+          return {
+            id: p.id,
+            name: p.name,
+            vn: "",
+            desc: "Serves " + p.serves + ": " + p.includes.join(", ") + ".",
+            price: p.price,
+            tags: [],
+          };
+        }),
+      });
+    }
+    var byId = {};
+    categories.forEach(function (cat) {
+      cat.items.forEach(function (item) {
+        byId[item.id] = item;
+      });
+    });
+    return { categories: categories, byId: byId };
+  };
+
+  var CART_KEY = "tias-order-v1";
+  var MAX_QTY = 50;
+  var memoryCart = [];
+  var storageOk = true;
+
+  // Storage can be blocked (private windows, embedded previews). If reading
+  // or saving ever fails, the basket lives in memory for this page instead.
+  function readCart() {
+    if (!storageOk) return memoryCart.slice();
+    var raw;
+    try {
+      raw = window.localStorage.getItem(CART_KEY);
+    } catch (e) {
+      storageOk = false;
+      return memoryCart.slice();
+    }
+    if (raw === null) return [];
+    try {
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter(validLine) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function validLine(l) {
+    return (
+      l && typeof l.id === "string" && typeof l.qty === "number" &&
+      l.qty > 0 && l.qty <= MAX_QTY && Math.round(l.qty) === l.qty
+    );
+  }
+
+  function writeCart(lines, noteOnly) {
+    memoryCart = lines.slice();
+    if (storageOk) {
+      try {
+        window.localStorage.setItem(CART_KEY, JSON.stringify(lines));
+      } catch (e) {
+        storageOk = false;
+      }
+    }
+    document.dispatchEvent(new CustomEvent("tias:cart", { detail: { noteOnly: !!noteOnly } }));
+  }
+
+  TIAS.cart = {
+    lines: function () {
+      return readCart();
+    },
+    qty: function (id) {
+      var line = readCart().filter(function (l) {
+        return l.id === id;
+      })[0];
+      return line ? line.qty : 0;
+    },
+    set: function (id, qty) {
+      qty = Math.max(0, Math.min(MAX_QTY, Math.round(qty) || 0));
+      var lines = readCart();
+      var found = false;
+      lines = lines
+        .map(function (l) {
+          if (l.id !== id) return l;
+          found = true;
+          return { id: l.id, qty: qty, note: l.note || "" };
+        })
+        .filter(function (l) {
+          return l.qty > 0;
+        });
+      if (!found && qty > 0) lines.push({ id: id, qty: qty, note: "" });
+      writeCart(lines);
+    },
+    add: function (id, n) {
+      TIAS.cart.set(id, TIAS.cart.qty(id) + n);
+    },
+    note: function (id, text) {
+      var lines = readCart().map(function (l) {
+        return l.id === id ? { id: l.id, qty: l.qty, note: String(text).slice(0, 140) } : l;
+      });
+      writeCart(lines, true);
+    },
+    // Drop anything no longer on the menu.
+    prune: function (byId) {
+      var lines = readCart();
+      var kept = lines.filter(function (l) {
+        return byId[l.id];
+      });
+      if (kept.length !== lines.length) writeCart(kept);
+    },
+    clear: function () {
+      writeCart([]);
+    },
+    count: function () {
+      return readCart().reduce(function (n, l) {
+        return n + l.qty;
+      }, 0);
+    },
+  };
+
+  function updateCartCount() {
+    var count = TIAS.cart.count();
+    document.querySelectorAll("[data-cart-count]").forEach(function (el) {
+      el.textContent = count;
+      el.hidden = count === 0;
+      var link = el.closest("a");
+      if (link) {
+        link.setAttribute(
+          "aria-label",
+          count ? "Order now, " + count + (count === 1 ? " item" : " items") + " in your order" : "Order now"
+        );
+      }
+    });
+  }
+
+  document.addEventListener("tias:cart", function (e) {
+    if (!e.detail || !e.detail.noteOnly) updateCartCount();
+  });
+  // Keep other open tabs in step.
+  window.addEventListener("storage", function (e) {
+    if (e.key === CART_KEY) {
+      document.dispatchEvent(new CustomEvent("tias:cart", { detail: { noteOnly: false } }));
+    }
+  });
+
   /* ---------- start ---------- */
 
   renderHeader();
   renderFooter();
   fillContactDetails();
   renderHoursTables();
+  updateCartCount();
   updateOpenStatus();
   setInterval(updateOpenStatus, 60 * 1000);
 })();

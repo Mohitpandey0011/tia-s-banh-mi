@@ -22,10 +22,28 @@
         "<ul class=\"ticks\">" + p.includes.map(function (i) {
           return "<li>" + TIAS.esc(i) + "</li>";
         }).join("") + "</ul>" +
-        "</article>"
+        '<div class="pack-actions">' +
+        '<button type="button" class="btn btn-primary btn-sm" data-pack-add="' + TIAS.esc(p.id) + '">' +
+        'Add to order<span class="sr-only"> ' + TIAS.esc(p.name) + "</span></button>" +
+        '<span class="pack-status" data-pack-status="' + TIAS.esc(p.id) + '" aria-live="polite"></span>' +
+        "</div></article>"
       );
     })
     .join("");
+
+  // Share packs go straight into the pick-up order.
+  function renderPackStatus() {
+    document.querySelectorAll("[data-pack-status]").forEach(function (el) {
+      var qty = TIAS.cart.qty(el.getAttribute("data-pack-status"));
+      el.innerHTML = qty ? qty + ' in your order · <a href="order.html#cart-panel">View order</a>' : "";
+    });
+  }
+  document.getElementById("share-packs").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-pack-add]");
+    if (btn) TIAS.cart.add(btn.getAttribute("data-pack-add"), 1);
+  });
+  document.addEventListener("tias:cart", renderPackStatus);
+  renderPackStatus();
 
   boxesEl.innerHTML = K.boxes
     .map(function (b) {
