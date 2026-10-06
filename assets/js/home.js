@@ -9,10 +9,15 @@
     var dishes = [];
     D.menu.forEach(function (cat) {
       cat.items.forEach(function (item) {
-        if (item.featured) dishes.push(item);
+        if (item.featured) dishes.push({ item: item, cat: cat });
       });
     });
-    featured.innerHTML = dishes.slice(0, 4).map(TIAS.dishCard).join("");
+    featured.innerHTML = dishes
+      .slice(0, 4)
+      .map(function (d) {
+        return TIAS.dishCard(d.item, d.cat);
+      })
+      .join("");
   }
 
   var cats = document.getElementById("home-categories");
@@ -21,6 +26,7 @@
       .map(function (cat) {
         return (
           '<a class="cat-tile" href="menu.html#' + cat.id + '">' +
+          '<span class="cat-art" aria-hidden="true">' + window.TIAS_ART.for(cat.id, cat.name) + "</span>" +
           '<span class="cat-name">' + TIAS.esc(cat.name) + "</span>" +
           '<span class="cat-blurb">' + TIAS.esc(cat.blurb) + "</span>" +
           '<span class="cat-count">' + cat.items.length + (cat.items.length === 1 ? " dish" : " dishes") + "</span>" +

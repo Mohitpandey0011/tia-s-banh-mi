@@ -20,9 +20,17 @@
     .map(function (cat) {
       return (
         '<section class="menu-section" id="' + cat.id + '" aria-labelledby="h-' + cat.id + '">' +
-        '<div class="menu-section-head"><h2 id="h-' + cat.id + '">' + TIAS.esc(cat.name) + "</h2>" +
-        "<p>" + TIAS.esc(cat.blurb) + "</p></div>" +
-        '<div class="grid grid-dishes">' + cat.items.map(TIAS.dishCard).join("") + "</div>" +
+        '<div class="menu-section-head">' +
+        '<span class="section-art" aria-hidden="true">' + window.TIAS_ART.for(cat.id, cat.name) + "</span>" +
+        '<div><h2 id="h-' + cat.id + '">' + TIAS.esc(cat.name) + "</h2>" +
+        (cat.blurb ? "<p>" + TIAS.esc(cat.blurb) + "</p>" : "") + "</div></div>" +
+        '<div class="grid grid-dishes">' +
+        cat.items
+          .map(function (item) {
+            return TIAS.dishCard(item, cat);
+          })
+          .join("") +
+        "</div>" +
         "</section>"
       );
     })

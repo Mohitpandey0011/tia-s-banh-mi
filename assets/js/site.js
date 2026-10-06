@@ -160,6 +160,101 @@
     return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(C.mapsQuery);
   };
 
+  TIAS.googleMapsUrl = function () {
+    return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(C.mapsQuery);
+  };
+
+  TIAS.appleMapsUrl = function () {
+    var a = C.address;
+    return (
+      "https://maps.apple.com/?q=" + encodeURIComponent(C.name) +
+      "&address=" + encodeURIComponent(a.street2 + ", " + a.suburb + " " + a.state + " " + a.postcode)
+    );
+  };
+
+  /*
+   * A simple drawn map of the block (not to scale). It's inline SVG rather
+   * than an embedded Google map, so it always shows, including in previews
+   * that block third-party frames. The buttons open real maps.
+   */
+  var MAP_SVG =
+    '<svg class="map-svg" viewBox="0 0 640 360" role="img" aria-labelledby="map-title map-desc">' +
+    '<title id="map-title">Map: Tia\'s Bánh Mì in Cavill Lane, Surfers Paradise</title>' +
+    '<desc id="map-desc">Cavill Lane sits between Surfers Paradise Boulevard and Orchid Avenue, next to Cavill Mall, ' +
+    "opposite the Cavill Avenue G:link station and about 200 metres from Surfers Paradise Beach.</desc>" +
+    '<rect width="640" height="360" fill="#EFE5D0"/>' +
+    // blocks
+    '<g fill="#E4D6BA">' +
+    '<rect x="10" y="20" width="128" height="200" rx="6"/><rect x="10" y="262" width="128" height="88" rx="6"/>' +
+    '<rect x="198" y="20" width="164" height="200" rx="6"/><rect x="198" y="262" width="164" height="88" rx="6"/>' +
+    '<rect x="396" y="20" width="82" height="200" rx="6"/><rect x="396" y="262" width="82" height="88" rx="6"/>' +
+    "</g>" +
+    // beach and sea
+    '<rect x="500" y="0" width="62" height="360" fill="#F3D9A4"/>' +
+    '<rect x="562" y="0" width="78" height="360" fill="#BFDCE5"/>' +
+    '<path d="M578 40 q8 -6 16 0 t16 0 t16 0 M584 120 q8 -6 16 0 t16 0 t16 0 M578 200 q8 -6 16 0 t16 0 t16 0 M584 280 q8 -6 16 0 t16 0 t16 0" ' +
+    'stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8"/>' +
+    // roads
+    '<g fill="#FFFDF8">' +
+    '<rect x="148" y="0" width="40" height="360"/>' +
+    '<rect x="370" y="0" width="18" height="360"/>' +
+    '<rect x="484" y="0" width="16" height="360"/>' +
+    '<rect x="0" y="232" width="148" height="20"/>' +
+    "</g>" +
+    // Cavill Mall (pedestrian)
+    '<rect x="188" y="230" width="296" height="24" fill="#F8EBD3"/>' +
+    '<path d="M188 230 H484 M188 254 H484" stroke="#D9C49C" stroke-width="2" stroke-dasharray="4 4"/>' +
+    // light rail along Surfers Paradise Blvd
+    '<path d="M168 0 V360" stroke="#2E6A3E" stroke-width="3" stroke-dasharray="10 6"/>' +
+    // Cavill Lane block, highlighted
+    '<rect x="204" y="118" width="152" height="100" rx="8" fill="#F6E3C3" stroke="#D08A2E" stroke-width="3" stroke-dasharray="7 5"/>' +
+    '<text x="280" y="196" text-anchor="middle" font-size="15" font-weight="700" fill="#221B14">Cavill Lane</text>' +
+    '<text x="280" y="212" text-anchor="middle" font-size="11" fill="#4A4036">under the Hilton</text>' +
+    // pin
+    '<g transform="translate(280 168)">' +
+    '<path d="M0 0 C-14 -18 -20 -26 -20 -36 A20 20 0 1 1 20 -36 C20 -26 14 -18 0 0Z" fill="#C2372B"/>' +
+    '<circle cx="0" cy="-36" r="8" fill="#FFFFFF"/>' +
+    "</g>" +
+    '<g transform="translate(280 96)">' +
+    '<rect x="-62" y="-20" width="124" height="28" rx="14" fill="#221B14"/>' +
+    '<text x="0" y="-1" text-anchor="middle" font-size="13" font-weight="700" fill="#FBF4E8">Tia\'s Bánh Mì</text>' +
+    "</g>" +
+    // G:link station
+    '<g transform="translate(168 242)">' +
+    '<rect x="-14" y="-14" width="28" height="28" rx="7" fill="#2E6A3E"/>' +
+    '<text x="0" y="5" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">G</text>' +
+    "</g>" +
+    '<text x="74" y="216" text-anchor="middle" font-size="11" font-weight="700" fill="#2E6A3E">G:link</text>' +
+    '<text x="74" y="229" text-anchor="middle" font-size="11" fill="#2E6A3E">Cavill Ave station</text>' +
+    // street labels
+    '<g font-size="12" font-weight="600" fill="#6E6355">' +
+    '<text transform="translate(142 120) rotate(-90)" text-anchor="middle">Surfers Paradise Blvd</text>' +
+    '<text transform="translate(383 120) rotate(-90)" text-anchor="middle">Orchid Ave</text>' +
+    '<text transform="translate(496 120) rotate(-90)" text-anchor="middle">The Esplanade</text>' +
+    '<text x="74" y="278" text-anchor="middle">Cavill Ave</text>' +
+    '<text x="436" y="246" text-anchor="middle">Cavill Mall</text>' +
+    "</g>" +
+    '<text transform="translate(533 180) rotate(-90)" text-anchor="middle" font-size="13" font-weight="700" fill="#8A6A2E">Surfers Paradise Beach</text>' +
+    // north arrow + note
+    '<g transform="translate(30 50)"><path d="M0 -16 L8 6 L0 1 L-8 6Z" fill="#221B14"/>' +
+    '<text x="0" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#221B14">N</text></g>' +
+    '<text x="14" y="350" font-size="10" fill="#6E6355">Not to scale</text>' +
+    "</svg>";
+
+  TIAS.mapCard = function () {
+    return (
+      '<figure class="map-card">' +
+      MAP_SVG +
+      "<figcaption>" +
+      "<p><strong>Shop G29a, Cavill Lane</strong>, 3113 Surfers Paradise Blvd. Opposite the Cavill Avenue G:link station, " +
+      "about 200 m from the beach.</p>" +
+      '<div class="btn-row">' +
+      '<a class="btn btn-primary btn-sm" href="' + TIAS.esc(TIAS.googleMapsUrl()) + '" target="_blank" rel="noopener">Open in Google Maps</a>' +
+      '<a class="btn btn-secondary btn-sm" href="' + TIAS.esc(TIAS.appleMapsUrl()) + '" target="_blank" rel="noopener">Apple Maps</a>' +
+      "</div></figcaption></figure>"
+    );
+  };
+
   /* ---------- header & footer ---------- */
 
   function currentPage() {
@@ -331,12 +426,7 @@
       if (s) el.textContent = s;
     });
     document.querySelectorAll("[data-map]").forEach(function (el) {
-      el.innerHTML =
-        '<a class="map-fallback" href="' + TIAS.directionsUrl() + '">Open in Google Maps</a>' +
-        '<iframe title="Map showing Tia\'s Bánh Mì on Cavill Lane" loading="lazy" ' +
-        'referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' +
-        encodeURIComponent(C.mapsQuery) +
-        '&output=embed"></iframe>';
+      el.innerHTML = TIAS.mapCard();
     });
   }
 
@@ -391,7 +481,33 @@
 
   var TAG_LABELS = { popular: "Popular", v: "Vegetarian", spicy: "Spicy" };
 
-  TIAS.dishCard = function (item) {
+  // A dish picture: the real photo if data.js gives one (falling back to the
+  // illustration if it fails to load), otherwise the illustration.
+  TIAS.media = function (item, cat, cls) {
+    var art = window.TIAS_ART ? window.TIAS_ART.forDish(item, cat) : "";
+    var photo = item.image
+      ? '<img src="' + TIAS.esc(item.image) + '" alt="" loading="lazy" decoding="async">'
+      : "";
+    return (
+      '<span class="media ' + (cls || "") + (photo ? " has-photo" : "") + '" aria-hidden="true">' +
+      photo + '<span class="media-art">' + art + "</span></span>"
+    );
+  };
+
+  // Swap a broken photo for its illustration (no inline handlers needed).
+  document.addEventListener(
+    "error",
+    function (e) {
+      var t = e.target;
+      if (t && t.tagName === "IMG" && t.parentNode && t.parentNode.classList.contains("media")) {
+        t.parentNode.classList.remove("has-photo");
+        t.parentNode.removeChild(t);
+      }
+    },
+    true
+  );
+
+  TIAS.dishCard = function (item, cat) {
     var tags = (item.tags || []).map(function (t) {
       return '<span class="tag tag-' + t + '">' + TAG_LABELS[t] + "</span>";
     });
@@ -401,15 +517,17 @@
     var search = [item.name, item.vn, item.desc].join(" ").toLowerCase();
     return (
       '<article class="dish" data-tags="' + (item.tags || []).join(" ") + '" data-search="' + TIAS.esc(search) + '">' +
+      TIAS.media(item, cat, "dish-media") +
+      '<div class="dish-body">' +
       '<div class="dish-top"><h3 class="dish-name">' + TIAS.esc(item.name) + "</h3>" +
       (item.price != null
-        ? '<span class="dish-price">' + TIAS.money(item.price) + "</span>"
-        : '<span class="dish-price dish-price-tbc">Price on order</span>') +
+        ? '<span class="dish-price">' + TIAS.price(item.price) + "</span>"
+        : '<span class="dish-price dish-price-tbc">Price TBC</span>') +
       "</div>" +
       (item.vn ? '<p class="dish-vn" lang="vi">' + TIAS.esc(item.vn) + "</p>" : "") +
-      '<p class="dish-desc">' + TIAS.esc(item.desc) + "</p>" +
+      (item.desc ? '<p class="dish-desc">' + TIAS.esc(item.desc) + "</p>" : "") +
       (tags.length ? '<div class="dish-tags">' + tags.join("") + "</div>" : "") +
-      "</article>"
+      "</div></article>"
     );
   };
 

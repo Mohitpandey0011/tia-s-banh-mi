@@ -44,17 +44,18 @@
       : '<span class="dish-price-tbc">Price TBC</span>';
   }
 
-  function itemRow(item) {
+  function itemRow(item, cat) {
     var tags = (item.tags || []).map(function (t) {
       return '<span class="tag tag-' + t + '">' + TAG_LABELS[t] + "</span>";
     });
     if (item.draft && C.showPreviewBanner) tags.push('<span class="tag tag-draft">To confirm</span>');
     return (
       '<article class="order-item">' +
+      TIAS.media(item, cat, "order-media") +
       '<div class="order-item-info">' +
       '<h3 class="order-item-name">' + esc(item.name) + "</h3>" +
       (item.vn ? '<p class="dish-vn" lang="vi">' + esc(item.vn) + "</p>" : "") +
-      '<p class="order-item-desc">' + esc(item.desc) + "</p>" +
+      (item.desc ? '<p class="order-item-desc">' + esc(item.desc) + "</p>" : "") +
       (tags.length ? '<div class="dish-tags">' + tags.join("") + "</div>" : "") +
       "</div>" +
       '<div class="order-item-side">' + priceHtml(item) +
@@ -67,9 +68,16 @@
     .map(function (cat) {
       return (
         '<section class="order-section" id="' + cat.id + '" aria-labelledby="oh-' + cat.id + '">' +
-        '<h2 id="oh-' + cat.id + '">' + esc(cat.name) + "</h2>" +
-        '<p class="order-section-blurb">' + esc(cat.blurb) + "</p>" +
-        cat.items.map(itemRow).join("") +
+        '<div class="order-section-head">' +
+        '<span class="section-art" aria-hidden="true">' + window.TIAS_ART.for(cat.id, cat.name) + "</span>" +
+        '<div><h2 id="oh-' + cat.id + '">' + esc(cat.name) + "</h2>" +
+        (cat.blurb ? '<p class="order-section-blurb">' + esc(cat.blurb) + "</p>" : "") +
+        "</div></div>" +
+        cat.items
+          .map(function (item) {
+            return itemRow(item, cat);
+          })
+          .join("") +
         "</section>"
       );
     })

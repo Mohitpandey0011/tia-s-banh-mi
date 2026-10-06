@@ -16,6 +16,7 @@
     .map(function (p) {
       return (
         '<article class="card pack">' +
+        TIAS.media({ id: p.id, name: p.name }, null, "pack-media") +
         '<div class="pack-top"><h3>' + TIAS.esc(p.name) + "</h3>" +
         '<span class="price">' + TIAS.money(p.price) + "</span></div>" +
         '<p class="serves">Serves ' + TIAS.esc(p.serves) + "</p>" +
@@ -52,6 +53,7 @@
       return (
         '<article class="card box' + (b.popular ? " box-popular" : "") + '">' +
         (b.popular ? '<span class="badge">Most popular</span>' : "") +
+        TIAS.media({ id: b.id, name: b.name }, null, "pack-media") +
         '<div class="pack-top"><h3 id="box-' + b.id + '">' + TIAS.esc(b.name) + "</h3>" +
         '<span class="price">' + price + "</span></div>" +
         '<p class="serves">' + serves + "</p>" +
